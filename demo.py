@@ -8,6 +8,7 @@ from skimage.transform import rescale, resize
 from time import time
 import argparse
 import ast
+import dlib
 # import pdb
 from lib_facedet import FaceDetector
 
@@ -41,7 +42,8 @@ def main(args):
         name = image_path.strip().split('/')[-1][:-4]
 
         # read image
-        image = imread(image_path)
+        # image = imread(image_path)
+        image = dlib.load_rgb_image(image_path)
         [h, w, _] = image.shape
         
             # resize image if so large
