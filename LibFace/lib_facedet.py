@@ -99,5 +99,14 @@ class FaceLandmarkDetector:
         
         return shape
             # shape.part(0), shape.part(1) ...
+
+    def convert_shape2mat(self, shape, dtype='int'):
+        
+        mat2d_nx2 = np.zeros((68, 2), dtype=dtype)
+
+        for i in range(68):
+            mat2d_nx2[i] = (shape.part(i).x, shape.part(i).y)
+
+        return mat2d_nx2
     
     

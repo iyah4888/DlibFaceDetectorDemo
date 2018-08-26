@@ -9,11 +9,14 @@ from time import time
 import argparse
 import ast
 # import pdb
-from lib_facedet import FaceDetector, FaceLandmarkDetector
+from LibFace import FaceDetector, FaceLandmarkDetector
 import dlib
 
-def get_img_flist(image_folder):
-    types = ('*.jpg', '*.png')
+
+
+
+def get_img_flist(image_folder, types):
+    # types = ('*.jpg', '*.png')
     image_path_list= []
     for files in types:
         image_path_list.extend(glob(os.path.join(image_folder, files)))
@@ -37,11 +40,12 @@ def main(args):
         os.mkdir(save_folder)
 
     # read all the file list in a folder
-    image_path_list = get_img_flist(image_folder)
+    image_path_list = get_img_flist(image_folder, ('*.jpg', '*.png'))
     
     for i, image_path in enumerate(image_path_list):
         print(image_path)    
         name = image_path.strip().split('/')[-1][:-4]
+        svname = os.path.join(save_folder, name)
 
         # read image
         image = imread(image_path)
@@ -59,6 +63,9 @@ def main(args):
                 # crop_image = obj_facedetect.crop(image, crop_transformer)
         shape = obj_facelandmarkdet.detect(crop_image, det_bbox = None)
         
+        shapemat_nx2 = obj_facelandmarkdet.convert_shape2mat(shape)
+        np.savetxt(svname + '.lmark', shapemat_nx2) #, fmt='')
+
         win.clear_overlay()
         for i in range(68):
             cv2.circle(crop_image, (shape.part(i).x, shape.part(i).y), 1, (255, 0, 0), -1)
@@ -66,8 +73,8 @@ def main(args):
         dlib.hit_enter_to_continue()
 
         if args.isImage:
-            print('[Saved] ' + os.path.join(save_folder, name + '.jpg'))
-            imsave(os.path.join(save_folder, name + '.jpg'), crop_image) 
+            print('[Saved] ' + svname + '.jpg')
+            imsave(svname + '.jpg', crop_image) 
        
         # if args.isShow:
         #     # ---------- Plot
