@@ -54,7 +54,7 @@ class FaceDetector:
             return None
 
         image = image/255.
-        cropped_image = warp(image, tform.inverse, output_shape=(self.resolution_inp, self.resolution_inp))
+        cropped_image = warp(image, tform.inverse, output_shape=(self.resolution_inp, self.resolution_inp),  mode = ‘symmetric’) # preserve_range = True
         cropped_image = (cropped_image*255.).astype(np.uint8)
         return cropped_image
 
